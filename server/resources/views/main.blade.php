@@ -43,7 +43,6 @@
             <button type="submit" class="btn btn-outline-primary" v-on:click="sort_brick()" >Подтвердить</button>
           </div>
         <div class="container mt-5">
-            {{-- <h1>Список товаров</h1> --}}
             <div class="row">
             @verbatim
                 <div class="col mb-3" v-for="item in items">

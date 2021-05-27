@@ -1,89 +1,170 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
+  <body>
+    <div id="app">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#">Список товаров</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Главная</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/api/cart">Корзина</a>
+                  </li>
+                </ul>
+                <form class="d-flex justify-content-end">
+                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="search">
+                  <button class="btn btn-outline-success" type="submit" v-on:click="search_brick()">Search</button>
+                </form>
+              </div>
+            </div>
+          </nav>
+          <div class="container mt-5">
+            <h2>Сортировка</h2>
+            <select class="form-select " v-model="sort_material" aria-label="Default select example">
+                <option value="none">Показать все</option>
+                <option value="ceramic">Керамический </option>
+                <option value="silicate">Силикатный </option>
+                <option value="clinker">Клинкерный </option>
+                <option value="fireclay" >Шамотный </option>
+                <option value="hyper-pressed">Гиперпрессованный </option>
+            </select>
+            <button type="submit" class="btn btn-outline-primary" v-on:click="sort_brick()" >Подтвердить</button>
           </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col mb-3" v-for="item in items" :key="item.id">
+                    <div class="card" style="width: 19rem;">
+                        <img v-bind:src="item.img" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">{{item.title}}</h5>
+                            <h6 class="card-text">Производитель: {{item.manufacturer}}</h6>
+                            <h6 class="card-text">Материал: {{item.material}}</h6>
+                            <p class="card-text">{{item.info}}</p>
+                            <a href="#" class="btn btn-success">{{item.price}} руб.</a>
+                        </div>                
+                    </div>
+                </div>
+            </div>
+
+
+            
+        </div>
+    </div>
+
+    <!--Подключаем axios для выполнения запросов к api -->
+
+
+
+
+</body>
+    
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
-  }
-}
+    data(){
+        return{
+            id: '',
+            title: '',
+            manufacturer: '',
+            info: '',
+            material: '',
+            price: '',
+            is_hollow: 0,
+            items: [],
+            search: '',
+            sort_material: 'Сортировка по материалу'
+        }
+    },
+
+    mounted(){
+        this.$axios.get('http://127.0.0.1:8000/api/brick/all')
+        .then(req => {   
+            this.items = req.data ;                    
+            console.log(req.data);        
+        });
+    },
+
+    methods: {
+        loadBrickList(){
+            this.$axios.get('http://127.0.0.1:8000/api/brick/all')
+            .then(req => {   
+                this.items = req.data ;                    
+                console.log(req.data);
+            })
+        },
+
+        sort_brick(){
+            if(this.sort_material == 'none'){
+                this.loadBrickList();
+            } else {
+                this.$axios.get('http://127.0.0.1:8000/api/brick/sort/' + this.sort_material, {})
+                .then(req => {   
+                    this.items = req.data ;                    
+                    console.log(req.data);
+                })
+            }
+            
+        },
+        search_brick(){
+            if(this.search == ''){
+                this.loadBrickList();
+            } else {
+                this.$axios.get('http://127.0.0.1:8000/api/brick/search/' + this.search, {})
+                .then(req => {   
+                    this.items = req.data ;                    
+                    console.log(req.data);
+                })
+            }
+        },
+    },
+
+}      
 </script>
+
+<style>
+.container {
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  font-family:
+    'Quicksand',
+    'Source Sans Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  display: block;
+  font-weight: 300;
+  font-size: 100px;
+  color: #35495e;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-weight: 300;
+  font-size: 42px;
+  color: #526488;
+  word-spacing: 5px;
+  padding-bottom: 15px;
+}
+
+.links {
+  padding-top: 15px;
+}
+</style>
