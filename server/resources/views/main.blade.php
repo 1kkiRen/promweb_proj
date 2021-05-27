@@ -5,6 +5,11 @@
     <title>Document</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <style>
+        body{
+            background-image: url(http://www.nellymikhaylova.ru/wp-content/uploads/2016/01/kirpichnye-steny-5-1024x683.jpg)
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -22,16 +27,20 @@
                   <li class="nav-item">
                     <a class="nav-link" href="/api/cart">Корзина</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/api/admin">Админ</a>
+                  </li>
                 </ul>
-                <form class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end">
                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="search">
-                  <button class="btn btn-outline-success" type="submit" v-on:click="search_brick()">Search</button>
-                </form>
+                  <button class="btn btn-outline-success" v-on:click="search_brick()">Search</button>
+                </div>
               </div>
             </div>
           </nav>
+          {{-- <div class="card"> --}}
           <div class="container mt-5">
-            <h2>Сортировка</h2>
+            <h2 style="color: white;">Сортировка</h2>
             <select class="form-select " v-model="sort_material" aria-label="Default select example">
                 <option value="none">Показать все</option>
                 <option value="ceramic">Керамический </option>
@@ -40,9 +49,11 @@
                 <option value="fireclay" >Шамотный </option>
                 <option value="hyper-pressed">Гиперпрессованный </option>
             </select>
-            <button type="submit" class="btn btn-outline-primary" v-on:click="sort_brick()" >Подтвердить</button>
+            <button type="submit" class="btn btn-primary" v-on:click="sort_brick()">Подтвердить</button>
           </div>
+        {{-- </div> --}}
         <div class="container mt-5">
+            {{-- <h1>Список товаров</h1> --}}
             <div class="row">
             @verbatim
                 <div class="col mb-3" v-for="item in items">
@@ -53,7 +64,7 @@
                             <h6 class="card-text">Производитель: {{item.manufacturer}}</h6>
                             <h6 class="card-text">Материал: {{item.material}}</h6>
                             <p class="card-text">{{item.info}}</p>
-                            <a href="#" class="btn btn-success">{{item.price}} руб.</a>
+                            <a class="btn btn-success">{{item.price}} руб.</a>
                         </div>                
                     </div>
                 </div>
@@ -108,6 +119,7 @@
                     
                 },
                 search_brick(){
+                    console.log(this.search);
                     if(this.search == ''){
                         this.loadBrickList();
                     } else {

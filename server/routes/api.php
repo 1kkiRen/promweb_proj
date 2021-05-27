@@ -28,6 +28,14 @@ Route::get('/brick/sort/{value}', [BrickController::class, 'sort']);
 
 Route::get('/brick/search/{value}', [BrickController::class, 'search']);
 
+Route::get('/brick/delete/{id}', [BrickController::class, 'delete']);
+
+Route::post('/brick/add', [BrickController::class, 'add']);
+
 Route::get('/cart', function () {
     return view('cart');
+});
+
+Route::get('/admin', function () {
+    return view('admin');
 });

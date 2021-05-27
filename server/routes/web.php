@@ -1,7 +1,5 @@
 <?php
-header('Content-type: text/html');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: *');
+
 use Illuminate\Support\Facades\Route;
 
 /*
