@@ -16,4 +16,13 @@ class BrickController extends Controller
         $brick = Brick::where('material', $value)->get();       
         return $brick;
     }
+
+    public function search($value){
+        $brick = Brick::where('material', $value)
+         -> orWhere('manufacturer', $value)
+          -> orWhere('price', $value)
+           -> orWhere('title', $value)
+            ->get();       
+        return $brick;
+    }
 }

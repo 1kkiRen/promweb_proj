@@ -26,6 +26,8 @@ Route::get('/brick/all', [BrickController::class, 'all']);
 
 Route::get('/brick/sort/{value}', [BrickController::class, 'sort']);
 
+Route::get('/brick/search/{value}', [BrickController::class, 'search']);
+
 Route::get('/cart', function () {
     return view('cart');
 });

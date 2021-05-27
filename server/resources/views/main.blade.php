@@ -17,7 +17,7 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Главная</a>
+                    <a class="nav-link active" aria-current="page" href="/">Главная</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="/api/cart">Корзина</a>
@@ -25,7 +25,7 @@
                 </ul>
                 <form class="d-flex justify-content-end">
                   <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" v-model="search">
-                  <button class="btn btn-outline-success" type="submit">Search</button>
+                  <button class="btn btn-outline-success" type="submit" v-on:click="search_brick()">Search</button>
                 </form>
               </div>
             </div>
@@ -33,7 +33,7 @@
           <div class="container mt-5">
             <h2>Сортировка</h2>
             <select class="form-select " v-model="sort_material" aria-label="Default select example">
-                <option value="none">Сортировка по материалу</option>
+                <option value="none">Показать все</option>
                 <option value="ceramic">Керамический </option>
                 <option value="silicate">Силикатный </option>
                 <option value="clinker">Клинкерный </option>
@@ -48,7 +48,7 @@
             @verbatim
                 <div class="col mb-3" v-for="item in items">
                     <div class="card" style="width: 19rem;">
-                        <img src={{item.img}} class="card-img-top">
+                        <img v-bind:src="item.img" class="card-img-top">
                         <div class="card-body">
                             <h5 class="card-title">{{item.title}}</h5>
                             <h6 class="card-text">Производитель: {{item.manufacturer}}</h6>
@@ -109,8 +109,16 @@
                     
                 },
                 search_brick(){
-
-                }
+                    if(this.search == ''){
+                        this.loadBrickList();
+                    } else {
+                        axios.get('api/brick/search/' + this.search, {})
+                        .then(req => {   
+                            this.items = req.data ;                    
+                            console.log(req.data);
+                        })
+                    }
+                },
             
             },
             mounted(){
